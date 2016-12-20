@@ -9,4 +9,4 @@ loading of data via the serial port.
 The principle of this program is simple: Write to batches of memory addresses at once (to avoid USB serial adapter
 latency problems), and then read back the data to verify that it has been written correctly.
 
-
+Since we are communicating with das U-Boot, we call our utility "Gurtude" after the submarine telephone of the same name.
