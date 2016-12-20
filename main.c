@@ -63,7 +63,10 @@ int main(int argc,char **argv)
   unsigned long long imagebytes=(data[12]<<24LL)+(data[13]<<16)+(data[14]<<8)+(data[15]<<0);
   imagebytes&=0xffffffff;
 
-  printf("Attempting to load '%s' @ 0x%llx (length = 0x%llx)\n",
-	 file,loadaddress,imagebytes);
+  unsigned long long entryaddress=(data[20]<<24LL)+(data[21]<<16)+(data[22]<<8)+(data[23]<<0);
+  entryaddress&=0xffffffff;
+  
+  printf("Attempting to load '%s' @ 0x%llx (length = 0x%llx, entry point = 0x%llx)\n",
+	 file,loadaddress,imagebytes,entryaddress);
   
 }
