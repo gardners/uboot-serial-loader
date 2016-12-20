@@ -1,4 +1,4 @@
 all:	gertrude
 
-gertrude:	main.c
-	$(CC) -o gertrude main.c
+gertrude:	main.c serial.c gertrude.h
+	$(CC) -o gertrude main.c serial.c
