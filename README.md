@@ -10,3 +10,10 @@ The principle of this program is simple: Write to batches of memory addresses at
 latency problems), and then read back the data to verify that it has been written correctly.
 
 Since we are communicating with das U-Boot, we call our utility "Gurtude" after the submarine telephone of the same name.
+
+... oh, it looks like someone else has made such a thing in python already:
+
+https://galax.is/files/802/write-to-uboot.py
+
+We will test this.  A niggling concern is whether that one will work fast on usb serial adapters, as they typically
+add a LOT of latency to serial round-trips.  
