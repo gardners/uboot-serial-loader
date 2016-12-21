@@ -82,7 +82,7 @@ ssize_t read_nonblock(int fd, void *buf, size_t len)
     return -1;
   }
 
-  dump_bytes("bytes read from serial port",buf,nread);
+  // dump_bytes("bytes read from serial port",buf,nread);
   
   return nread;
 }
@@ -96,7 +96,7 @@ ssize_t write_all(int fd, const void *buf, size_t len)
   if ((size_t)written != len)
     { perror("write_all(): written != len"); return -1; }
 
-  if (1) fprintf(stderr,"write_all(%d) sent %d bytes : %s\n",
+  if (0) fprintf(stderr,"write_all(%d) sent %d bytes : %s\n",
 		 (int)len,(int)written,buf);
 
   

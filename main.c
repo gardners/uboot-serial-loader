@@ -13,27 +13,27 @@ int serialfd=-1;
 int compare_word(unsigned int offset,unsigned int w,unsigned char *data)
 {
   int r=0;
-  unsigned char w0=(w>>0)&0xff;
-  unsigned char w1=(w>>8)&0xff;
-  unsigned char w2=(w>>16)&0xff;
-  unsigned char w3=(w>>24)&0xff;
+  unsigned char w3=(w>>0)&0xff;
+  unsigned char w2=(w>>8)&0xff;
+  unsigned char w1=(w>>16)&0xff;
+  unsigned char w0=(w>>24)&0xff;
 
-  printf("compare offset = %x\n",offset);
+  //  printf("compare offset = %x\n",offset);
   
   if (data[offset+0]!=w0) {
-    printf("0x%08x : Saw %02x instead of %02x\n",offset+0,w0,data[offset+0]);
+    //    printf("0x%08x : Saw %02x instead of %02x\n",offset+0,w0,data[offset+0]);
     r++;
   }
   if (data[offset+1]!=w1) {
-    printf("0x%08x : Saw %02x instead of %02x\n",offset+1,w1,data[offset+1]);
+    //    printf("0x%08x : Saw %02x instead of %02x\n",offset+1,w1,data[offset+1]);
     r++;
   }
   if (data[offset+2]!=w2) {
-    printf("0x%08x : Saw %02x instead of %02x\n",offset+2,w2,data[offset+2]);
+    //    printf("0x%08x : Saw %02x instead of %02x\n",offset+2,w2,data[offset+2]);
     r++;
   }
   if (data[offset+3]!=w3) {
-    printf("0x%08x : Saw %02x instead of %02x\n",offset+3,w3,data[offset+3]);
+    //    printf("0x%08x : Saw %02x instead of %02x\n",offset+3,w3,data[offset+3]);
     r++;
   }
   return r;
@@ -126,10 +126,10 @@ int main(int argc,char **argv)
       char mdline[1024];
       int mdlinelen=0;
       unsigned int addr,w1,w2,w3,w4;
-      printf("(1) expected_offset=%llx, last_expected_offset=%llx\n",
+      if (0) printf("(1) expected_offset=%llx, last_expected_offset=%llx\n",
 	     expected_offset,last_expected_offset);
       while(expected_offset<=last_expected_offset) {
-	printf("(2) expected_offset=%llx, last_expected_offset=%llx\n",
+	if (0) printf("(2) expected_offset=%llx, last_expected_offset=%llx\n",
 	       expected_offset,last_expected_offset);
 
 	r=read_nonblock(serialfd,buf,1024);
@@ -138,17 +138,14 @@ int main(int argc,char **argv)
 	  if (buf[k]=='\n') {
 	    // check line
 	    mdline[mdlinelen]=0;
-	    printf("saw '%s'\n",mdline);
+	    // printf("saw '%s'\n",mdline);
 	    if (sscanf(mdline,"%x: %x %x %x %x",
 		       &addr,&w1,&w2,&w3,&w4)==5) {
 	      if (addr==expected_offset) {
-		printf("Valid line: %08x : %08x %08x %08x %08x\n",
-		       addr,w1,w2,w3,w4);
 		errors+=compare_word(addr-0x1000000,w1,data);
 		errors+=compare_word(addr-0x1000000+4,w2,data);
 		errors+=compare_word(addr-0x1000000+8,w3,data);
 		errors+=compare_word(addr-0x1000000+12,w4,data);
-		printf("Saw line for address %llx\n",expected_offset);
 		expected_offset+=16;		
 	      } else {
 		printf("Invalid line: %08x : %08x %08x %08x %08x\n",
@@ -166,7 +163,7 @@ int main(int argc,char **argv)
       printf("Writing %d bytes at 0x%08x\n",count,offset);      
 
       // Start memory write with advance
-      snprintf(cmd,1024,"mm.l %x\n",offset);
+      snprintf(cmd,1024,"mm.l %x\n",offset+0x1000000);
       write_all(serialfd,cmd,strlen(cmd));
 
       int question_marks_expected=1;
@@ -176,7 +173,7 @@ int main(int argc,char **argv)
 	{
 	  // Read from serial port until we get a ? mark
 
-	  fprintf(stderr,"?1 : e=%d, rx=%d\n",
+	  if (0) fprintf(stderr,"?1 : e=%d, rx=%d\n",
 		 question_marks_expected,question_marks_received);
 	  
 	  unsigned char buf[1024];
@@ -184,18 +181,18 @@ int main(int argc,char **argv)
 	  buf[r]=0;
 	  for(int k=0;k<r;k++) if (buf[k]=='?') question_marks_received++;
 	  while (question_marks_expected>question_marks_received) {
-	    printf("  Waiting for serial port to catch up...\n");
+	    if (0) printf("  Waiting for serial port to catch up...\n");
 	    r=read_nonblock(serialfd,buf,1024);
 	    buf[r]=0;
 	    for(int k=0;k<r;k++) if (buf[k]=='?') {
 		question_marks_received++;
-		fprintf(stderr,"?2 : e=%d, rx=%d\n",
+		if (0) fprintf(stderr,"?2 : e=%d, rx=%d\n",
 			question_marks_expected,question_marks_received);
 	      }
 	    if (r<1) usleep(10000);
 	  }
 
-	  fprintf(stderr,"?3 : e=%d, rx=%d\n",
+	  if (0) fprintf(stderr,"?3 : e=%d, rx=%d\n",
 		 question_marks_expected,question_marks_received);
 
 	  // Write bytes
@@ -204,7 +201,6 @@ int main(int argc,char **argv)
 		   data[offset+j+1],
 		   data[offset+j+2],
 		   data[offset+j+3]);
-	  printf("[%s]\n",cmd);
 	  write_all(serialfd,cmd,strlen(cmd));
 	  question_marks_expected++;
 	}
