@@ -17,3 +17,9 @@ https://galax.is/files/802/write-to-uboot.py
 
 We will test this.  A niggling concern is whether that one will work fast on usb serial adapters, as they typically
 add a LOT of latency to serial round-trips.  
+
+Anyway, our utility now largely works, writing 1KB blocks and verifying them.  A nice bonus is that it can resume
+relatively quickly, because the verification proces is much faster than writing.  So if the program is stopped for
+some reason, you can run it again, and it will make use of whatever is already loaded into memory.  
+
+It always loads the image at 0x1000000. This should be made configurable.
