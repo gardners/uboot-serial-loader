@@ -129,13 +129,13 @@ int main(int argc,char **argv)
       unsigned int addr,w1,w2,w3,w4;
       if (0) printf("(1) expected_offset=%llx, last_expected_offset=%llx\n",
 	     expected_offset,last_expected_offset);
+      time_t timeout=time(0)+3;
       while(expected_offset<=last_expected_offset) {
 	if (0) printf("(2) expected_offset=%llx, last_expected_offset=%llx\n",
 	       expected_offset,last_expected_offset);
 
 	r=read_nonblock(serialfd,buf,1024);
 	buf[r]=0;
-	time_t timeout=time(0)+3;
 	for(int k=0;k<r;k++)
 	  if (buf[k]=='\n') {
 	    // check line
@@ -177,7 +177,7 @@ int main(int argc,char **argv)
       int question_marks_expected=1;
       int question_marks_received=0;
 
-      time_t timeout=time(0)+4;
+      timeout=time(0)+4;
       for(int j=0;j<count;j+=4)
 	{
 	  // Read from serial port until we get a ? mark
