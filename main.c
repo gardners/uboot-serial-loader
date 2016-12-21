@@ -160,6 +160,8 @@ int main(int argc,char **argv)
 	if (r<1) usleep(10000);
       }
 
+      if (!errors) continue;
+      
       printf("Writing %d bytes at 0x%08x\n",count,offset);      
 
       // Start memory write with advance
