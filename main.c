@@ -157,7 +157,7 @@ int main(int argc,char **argv)
 	  } else {
 	    if (mdlinelen<1024) mdline[mdlinelen++]=buf[k];
 	  }
-	if (r<1) usleep(10000);
+	if (r<1) usleep(1000);
       }
 
       if (!errors) continue;
@@ -191,7 +191,7 @@ int main(int argc,char **argv)
 		if (0) fprintf(stderr,"?2 : e=%d, rx=%d\n",
 			question_marks_expected,question_marks_received);
 	      }
-	    if (r<1) usleep(10000);
+	    if (r<1) usleep(1000);
 	  }
 
 	  if (0) fprintf(stderr,"?3 : e=%d, rx=%d\n",
