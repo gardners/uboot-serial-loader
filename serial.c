@@ -48,6 +48,25 @@ int set_block(int fd)
   return 0;
 }
 
+int dump_bytes(char *msg,unsigned char *bytes,int length)
+{
+  printf("%s:\n",msg);
+  for(int i=0;i<length;i+=16) {
+    printf("%04X: ",i);
+    for(int j=0;j<16;j++) if (i+j<length) printf(" %02X",bytes[i+j]);
+    printf("  ");
+    for(int j=0;j<16;j++) {
+      int c;
+      if (i+j<length) c=bytes[i+j]; else c=' ';
+      if (c<' ') c='.';
+      if (c>0x7d) c='.';
+      printf("%c",c);
+    }
+    printf("\n");
+  }
+  return 0;
+}
+
 ssize_t read_nonblock(int fd, void *buf, size_t len)
 {
   ssize_t nread = read(fd, buf, len);
@@ -62,6 +81,9 @@ ssize_t read_nonblock(int fd, void *buf, size_t len)
     }
     return -1;
   }
+
+  dump_bytes("bytes read from serial port",buf,nread);
+  
   return nread;
 }
 
@@ -74,8 +96,9 @@ ssize_t write_all(int fd, const void *buf, size_t len)
   if ((size_t)written != len)
     { perror("write_all(): written != len"); return -1; }
 
-  if (0) fprintf(stderr,"write_all(%d) sent %d bytes.\n",
-		 (int)len,(int)written);
+  if (1) fprintf(stderr,"write_all(%d) sent %d bytes : %s\n",
+		 (int)len,(int)written,buf);
+
   
   return written;
 }
