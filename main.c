@@ -203,10 +203,12 @@ int main(int argc,char **argv)
 	    // In case ? in memory write gets corrupted
 	    if (time(0)>timeout) {
 	      printf("Timeout during write.\n");
+	      dump_bytes("last read",buf,r);
 	      write_all(serialfd," .\n .\n",6);
 	      break;
 	    }
 	  }
+	  if (time(0)>timeout) break;	    
 
 	  if (0) fprintf(stderr,"?3 : e=%d, rx=%d\n",
 		 question_marks_expected,question_marks_received);
