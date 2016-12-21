@@ -161,6 +161,7 @@ int main(int argc,char **argv)
 	  }
 	if (r<1) usleep(1000);
 	if (time(0)>=timeout) {
+	  printf("Timeout during verify.\n");
 	  errors=1024;
 	  break;
 	}
@@ -201,6 +202,7 @@ int main(int argc,char **argv)
 	    if (r<1) usleep(1000);
 	    // In case ? in memory write gets corrupted
 	    if (time(0)>timeout) {
+	      printf("Timeout during write.\n");
 	      write_all(serialfd," .\n .\n",6);
 	      break;
 	    }
