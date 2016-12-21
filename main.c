@@ -176,7 +176,8 @@ int main(int argc,char **argv)
 
       int question_marks_expected=1;
       int question_marks_received=0;
-      
+
+      time_t timeout=time(0)+4;
       for(int j=0;j<count;j+=4)
 	{
 	  // Read from serial port until we get a ? mark
@@ -198,6 +199,11 @@ int main(int argc,char **argv)
 			question_marks_expected,question_marks_received);
 	      }
 	    if (r<1) usleep(1000);
+	    // In case ? in memory write gets corrupted
+	    if (time(0)>timeout) {
+	      write_all(serialfd," .\n .\n",6);
+	      break;
+	    }
 	  }
 
 	  if (0) fprintf(stderr,"?3 : e=%d, rx=%d\n",
