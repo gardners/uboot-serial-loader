@@ -5,6 +5,7 @@
 #include <sys/mman.h>
 #include <strings.h>
 #include <unistd.h>
+#include <time.h>
 
 #include "gertrude.h"
 
@@ -134,6 +135,7 @@ int main(int argc,char **argv)
 
 	r=read_nonblock(serialfd,buf,1024);
 	buf[r]=0;
+	time_t timeout=time(0)+3;
 	for(int k=0;k<r;k++)
 	  if (buf[k]=='\n') {
 	    // check line
@@ -158,6 +160,10 @@ int main(int argc,char **argv)
 	    if (mdlinelen<1024) mdline[mdlinelen++]=buf[k];
 	  }
 	if (r<1) usleep(1000);
+	if (time(0)>=timeout) {
+	  errors=1024;
+	  break;
+	}
       }
 
       if (!errors) continue;
